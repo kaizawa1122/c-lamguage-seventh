@@ -5,11 +5,11 @@ void minscanf(char *fmt, ...);
 
 int main(void)
 {
-	int day,year;
+	int day, year;
 	char monthname[20];
 
-	minscanf("%d %s %d \n",&day,monthname, &year);
-	printf("day = %d monthname = %s year = %d \n",day,monthname,year);
+	minscanf("%d %s %d \n", &day, monthname, &year);
+	printf("day = %d monthname = %s year = %d \n", day, monthname, year);
 
 	return 0;
 }
@@ -32,16 +32,16 @@ void minscanf(char *fmt, ...)
 		switch(*++p)
 		{
 			case 'd':
-				ival = va_arg(ap,int *);
-				scanf("%d",ival);
+				ival = va_arg(ap, int *);
+				scanf("%d", ival);
 				break;
 			case 'f':
-				fval = va_arg(ap,float *);
-				scanf("%f",fval);
+				fval = va_arg(ap, float *);
+				scanf("%f", fval);
 				break;
 			case 's':
-				sval = va_arg(ap,char *);
-				scanf("%s",sval);
+				sval = va_arg(ap, char *);
+				scanf("%s", sval);
 				break;
 			default:
 				break;
