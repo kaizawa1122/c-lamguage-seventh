@@ -1,12 +1,8 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
 
 //mainの変数群
 #define MAXOP 100
-#define NUMBER '0'
 
-int getop(char[]);
 void push(double);
 double pop(void);
 
@@ -18,57 +14,73 @@ double val[MAXVAL];
 
 int main(void)
 {
-	int type;
-	double op2;
+	int flag;
+	double op,number;
 	char s[MAXOP];
+	char notnumber, newline;
 
-	while ((type = getop(s)) != EOF)
+	while (scanf("%s%c",s,&newline) == 2)
 	{
-		switch (type)
+		if (sscanf(s,"%lf",&number) == 1)
 		{
-			case NUMBER:
-				push(atof(s));
-				break;
-			case '+':
-				push(pop() + pop());
-				break;
-			case '*':
-				push(pop() * pop());
-				break;
-			case '-':
-				op2 = pop();
-				push(pop() - op2);
-				break;
-			case '/':
-				op2 = pop();
-				if (op2 != 0.0)
-				{
-					push(pop() / op2);
-				}
-				else
-				{
-					printf("error: zero divisor\n");
-				}
-				break;
-			case '%':
-				op2 = pop();
-				if (op2 != 0.0)
-				{
-					int opopfrom = pop();
-					int opopto = op2;
-					push(opopfrom % opopto);
-				}
-				else
-				{
-					printf("error: zero divisor\n");
-				}
-				break;
-			case '\n':
-				printf("\t%.8g\n", pop());
-				break;
-			default:
-				printf("error: unknown command %s\n", s);
-				break;
+			push(number);
+		}
+		else if (sscanf(s,"%c",&notnumber) == 1)
+		{
+			switch (notnumber)
+			{
+				case '+':
+					push(pop() + pop());
+					break;
+				case '*':
+					push(pop() * pop());
+					break;
+				case '-':
+					op = pop();
+					push(pop() - op);
+					break;
+				case '/':
+					op = pop();
+					if (op != 0.0)
+					{
+						push(pop() / op);
+					}
+					else
+					{
+						flag = 1;
+						printf("error: zero divisor\n");
+					}
+					break;
+				case '%':
+					op = pop();
+					if (op != 0.0)
+					{
+						int opopfrom = pop();
+						int opopto = op;
+						push(opopfrom % opopto);
+					}
+					else
+					{
+						flag = 1;
+						printf("error: zero divisor\n");
+					}
+					break;
+				case '!':
+					return 0;
+				default:
+					flag = 1;
+					printf("error: unknown command %s\n", s);
+					break;
+			}
+		}
+		if (newline == '\n' && flag == 0)
+		{
+			printf("\t%.8g\n", pop());
+		}
+		else if (newline == '\n' && flag == 1)
+		{
+			pop();
+			flag = 0;
 		}
 	}
 	return 0;
@@ -100,39 +112,3 @@ double pop(void)
 	}
 }
 
-//次の演算子あるいは数値の日演算数をとってくる
-int getop(char s[])
-{
-	int i, c;
-
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
-		;
-
-	s[1] = '\0';
-	i = 0;
-	if (c == '-' && !isdigit(s[++i] = c = getch()))
-	{
-		ungetch(c);
-		return '-';
-	}
-	if (!isdigit(c) && c != '.')
-	{
-		return c;
-	}
-	if (isdigit(c))
-	{
-		while (isdigit(s[++i] = c = getch()))
-			;
-	}
-	if (c == '.')
-	{
-		while (isdigit(s[++i] = c = getch()))
-			;
-	}
-	s[i] = '\0';
-	if (c != EOF)
-	{
-		ungetch(c);
-	}
-	return NUMBER;
-}
